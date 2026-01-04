@@ -1,47 +1,62 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  let blockSize = $state(0);
+  let inlineSize = $state(0);
+
+  // top left to bottom right
+  const pathString = $derived.by(() => {
+    return `M0 0 L${inlineSize} ${blockSize}`;
+  });
 </script>
 
-<main>
-  <div>
-    <a href="https://vite.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+<svelte:window bind:innerHeight={blockSize} bind:innerWidth={inlineSize} />
 
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+<main class="main">
+  <figure style="offset-path: path('{pathString}')">
+    <svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Rectangle moving along a fixed path"
+    >
+      <rect width="100" height="100" />
+    </svg>
+  </figure>
 </main>
 
-<style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
+<style global>
+  @scope (.main) {
+    @keyframes animation {
+      from {
+        offset-distance: 0%;
+      }
+      to {
+        offset-distance: 100%;
+      }
+    }
+
+    :scope {
+      position: relative;
+      block-size: 100dvh;
+      inline-size: 100dvw;
+      overflow: clip;
+      background: oklch(0% 0 0);
+    }
+
+    figure {
+      position: absolute;
+      margin: 0;
+      /* aspect-ratio: 1; */
+      fill: oklch(67.463% 0.14145 261.353);
+      offset-rotate: 0deg;
+      animation: animation 2.5s infinite linear alternate;
+      /* offset-anchor: center; */
+      /* offset-distance: 50%; */
+    }
+
+    svg {
+      display: block;
+    }
   }
 </style>
