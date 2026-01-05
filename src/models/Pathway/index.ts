@@ -29,6 +29,28 @@ export default class Pathway {
   getAsSVGElement(): SVGSVGElement | string {
     return `<line x1="${this.#x1}" x2="${this.#x2}" y1="${this.#y1}" y2="${
       this.#y2
-    }"/>`;
+    }" stroke="red"/>`;
+  }
+
+  static getReflectionPath(pathway: Pathway): Pathway {
+    const [x1, y1] = pathway.startPoint;
+    const [x2, y2] = pathway.endPoint;
+
+    const directionX = x2 - x1;
+    const directionY = y2 - y1;
+
+    const value = Math.sqrt(directionX ** 2 + directionY ** 2);
+
+    const [normalX, normalY] = [directionY / value, (directionX * -1) / value];
+
+    const multiplier = 100;
+
+    return new Pathway(
+      "reflection-path",
+      x2,
+      y2,
+      normalX * multiplier,
+      normalY * multiplier
+    );
   }
 }

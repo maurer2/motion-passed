@@ -1,4 +1,7 @@
 <script lang="ts">
+  // import Pathways from "./models/Pathways";
+  import Pathway from "./models/Pathway";
+
   let blockSize = $state(0);
   let inlineSize = $state(0);
 
@@ -6,6 +9,9 @@
   const pathString = $derived.by(() => {
     return `M0 0 L${inlineSize} ${blockSize}`;
   });
+
+  const startPath = new Pathway("start-path", 0, 0, 100, 500);
+  const nextPath = Pathway.getReflectionPath(startPath);
 </script>
 
 <svelte:window bind:innerHeight={blockSize} bind:innerWidth={inlineSize} />
@@ -23,6 +29,17 @@
       <rect width="100" height="100" />
     </svg>
   </figure>
+
+  <svg
+    width="1000"
+    height="1000"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    fill="#FF0000"
+  >
+    {@html startPath.getAsSVGElement()}
+    {@html nextPath.getAsSVGElement()}
+  </svg>
 </main>
 
 <style global>
