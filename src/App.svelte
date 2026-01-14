@@ -1,20 +1,23 @@
 <script lang="ts">
   // import Pathways from "./models/Pathways";
-  import Pathway from "./models/Pathway";
+  import Pathway from "./models/Pathway/index.svelte";
 
-  let blockSize = $state(0);
-  let inlineSize = $state(0);
+  let blockSizeWindow = $state(0);
+  let inlineSizeWindow = $state(0);
 
   // top left to bottom right
   const pathString = $derived.by(() => {
-    return `M0 0 L${inlineSize} ${blockSize}`;
+    return `M0 0 L${inlineSizeWindow} ${blockSizeWindow}`;
   });
 
   const startPath = new Pathway("start-path", 0, 0, 100, 500);
   const nextPath = Pathway.getReflectionPath(startPath);
 </script>
 
-<svelte:window bind:innerHeight={blockSize} bind:innerWidth={inlineSize} />
+<svelte:window
+  bind:innerHeight={blockSizeWindow}
+  bind:innerWidth={inlineSizeWindow}
+/>
 
 <main class="main">
   <figure style="offset-path: path('{pathString}')">
@@ -37,8 +40,8 @@
     aria-hidden="true"
     fill="#FF0000"
   >
-    {@html startPath.getAsSVGElement()}
-    {@html nextPath.getAsSVGElement()}
+    {@html startPath.svgElement()}
+    {@html nextPath.svgElement()}
   </svg>
 </main>
 

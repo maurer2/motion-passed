@@ -1,4 +1,4 @@
-import type Pathway from "../Pathway";
+import type Pathway from "../Pathway/index.svelte";
 
 export default class Pathways {
   #pathWays;
