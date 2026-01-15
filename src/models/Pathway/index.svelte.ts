@@ -5,35 +5,33 @@
 type Point = [x: number, y: number];
 
 export default class Pathway {
-  public readonly id;
-
   // can't use private properties/elements with runes
   private _startingPoint = $state<Point>([0, 0]);
   private _endPoint = $state<Point>([0, 0]);
+
+  public readonly id;
+  public readonly startingPoint: Point;
+  public readonly endPoint: Point;
+  public readonly svgElement: SVGSVGElement | string;
 
   constructor(id: string, x1: number, y1: number, x2: number, y2: number) {
     this.id = id;
     this._startingPoint = [x1, y1];
     this._endPoint = [x2, y2];
+
+    // https://github.com/sveltejs/svelte/pull/15820
+    this.startingPoint = $derived(this._startingPoint);
+    this.endPoint = $derived(this._endPoint);
+    this.svgElement = $derived.by(() => {
+      const [[x1, y1], [x2, y2]] = [this._startingPoint, this._endPoint];
+
+      return `<line x1="${x1}" x2="${x2}" y1="${y1}" y2="${y2}" stroke="red"/>`;
+    });
   }
 
-  // derived doesn't work with getters
-  startingPoint = $derived(() => {
-    return this._startingPoint;
-  });
-  endPoint = $derived(() => {
-    return this._endPoint;
-  });
-  svgElement = $derived(() => {
-    const [x1, y1] = this._startingPoint;
-    const [x2, y2] = this._endPoint;
-
-    return `<line x1="${x1}" x2="${x2}" y1="${y1}" y2="${y2}" stroke="red"/>`;
-  });
-
   static getReflectionPath(pathway: Pathway): Pathway {
-    const [x1, y1] = pathway.startingPoint();
-    const [x2, y2] = pathway.endPoint();
+    const [x1, y1] = pathway.startingPoint;
+    const [x2, y2] = pathway.endPoint;
 
     const directionX = x2 - x1;
     const directionY = y2 - y1;

@@ -40,8 +40,8 @@
     aria-hidden="true"
     fill="#FF0000"
   >
-    {@html startPath.svgElement()}
-    {@html nextPath.svgElement()}
+    {@html startPath.svgElement}
+    {@html nextPath.svgElement}
   </svg>
 </main>
 
